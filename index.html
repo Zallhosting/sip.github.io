@@ -72,46 +72,45 @@
         .snake {
             position: absolute;
             width: 20px;
-            height: 50px;
-            background: linear-gradient(to bottom, red, darkred);
-            border-radius: 10px;
+            height: 20px;
             z-index: 5;
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: snakeMovement 2s ease-in-out infinite;
         }
-
         .snake-head {
             width: 20px;
             height: 20px;
             background-color: darkgreen;
             border-radius: 50%;
             position: absolute;
-            top: 5px;
+            top: -10px;
         }
-
         .snake-tail {
             width: 20px;
             height: 20px;
             background-color: brown;
             border-radius: 50%;
             position: absolute;
-            bottom: 5px;
+            bottom: -10px;
         }
-
+        .snake-body {
+            background-color: red;
+            width: 10px;
+            border-radius: 5px;
+            position: absolute;
+        }
         @keyframes snakeMovement {
             0% {
-                transform: translateX(0) translateY(0);
+                transform: rotate(0deg);
             }
             50% {
-                transform: translateX(10px) translateY(10px); /* Modify to create a more interesting snake movement */
+                transform: rotate(15deg);
             }
             100% {
-                transform: translateX(0) translateY(0);
+                transform: rotate(0deg);
             }
         }
-
         .ladder {
             position: absolute;
             width: 10px;
@@ -119,7 +118,6 @@
             border-radius: 5px;
             z-index: 5;
         }
-
         .ladder-step {
             position: absolute;
             height: 5px;
@@ -127,7 +125,6 @@
             background-color: #FFF;
             border-radius: 2px;
         }
-
         #controls {
             margin: 20px;
             font-size: 18px;
@@ -186,16 +183,16 @@
             board.appendChild(cell);
         }
 
-        // Draw snakes and ladders
         const drawSnakeOrLadder = (start, end, type) => {
             const startCell = document.getElementById(`cell-${start}`);
             const endCell = document.getElementById(`cell-${end}`);
 
+            // Draw snake with a zigzag shape
             if (type === 'snake') {
                 const snake = document.createElement('div');
                 snake.classList.add('snake');
-                snake.style.top = `${startCell.offsetTop + 20}px`;
-                snake.style.left = `${startCell.offsetLeft + 30}px`;
+                snake.style.top = `${startCell.offsetTop + 10}px`;
+                snake.style.left = `${startCell.offsetLeft + 20}px`;
                 snake.style.height = `${Math.abs(startCell.offsetTop - endCell.offsetTop)}px`;
                 snake.style.transform = `rotate(${Math.atan2(endCell.offsetTop - startCell.offsetTop, endCell.offsetLeft - startCell.offsetLeft) * 57.2958}deg)`;
 
@@ -207,16 +204,21 @@
                 tail.classList.add('snake-tail');
                 snake.appendChild(tail);
 
+                const body = document.createElement('div');
+                body.classList.add('snake-body');
+                snake.appendChild(body);
+
                 board.appendChild(snake);
 
                 // Snake animation
                 setTimeout(() => {
                     snake.style.transition = 'top 2s, left 2s';
-                    snake.style.top = `${endCell.offsetTop + 20}px`;
-                    snake.style.left = `${endCell.offsetLeft + 30}px`;
+                    snake.style.top = `${endCell.offsetTop + 10}px`;
+                    snake.style.left = `${endCell.offsetLeft + 20}px`;
                 }, 100);  // Delay to allow initial positioning before animation
             }
 
+            // Draw ladder inside the grid
             if (type === 'ladder') {
                 const ladder = document.createElement('div');
                 ladder.classList.add('ladder');
@@ -226,7 +228,7 @@
 
                 board.appendChild(ladder);
 
-                // Ladder steps animation
+                // Ladder steps inside the board grid
                 const stepsCount = 5;
                 for (let i = 0; i < stepsCount; i++) {
                     const step = document.createElement('div');
